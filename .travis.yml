@@ -1,0 +1,47 @@
+language: java
+
+env:
+  matrix:
+    - ENGINE=lucee@4.5
+    - ENGINE=lucee@5
+    - ENGINE=adobe@10
+    - ENGINE=adobe@11
+    - ENGINE=adobe@2016
+
+branches:
+  only:
+  - development
+  - master
+
+dist: trusty
+
+sudo: required
+
+before_install:
+  # CommandBox Keys
+  - sudo apt-key adv --keyserver keys.gnupg.net --recv 6DA70622
+  - sudo echo "deb http://downloads.ortussolutions.com/debs/noarch /" | sudo tee -a
+    /etc/apt/sources.list.d/commandbox.list
+
+install:
+  # Install Commandbox
+  - sudo apt-get update && sudo apt-get --assume-yes install rsync jq commandbox
+  # Test that the box binary is available and ready for our tests
+  - box version
+  # Setup for our tests
+  - mkdir tests/results
+  - sudo chmod -R 775 tests/results
+
+# Build script - note module versioning is passed to ANT
+script:
+  # run our dependency install to ensure the workbench is in place
+  - box install
+  # execute our tests
+  - box testbox run
+
+after_failure:
+  - cd $TRAVIS_BUILD_DIR
+  # Display the contents of our root directory
+  # Spit out our Commandbox log in case we need to debug
+  - box server log name=$ENGINE
+  - cat `box system-log`
