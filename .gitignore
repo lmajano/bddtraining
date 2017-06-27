@@ -1,0 +1,5 @@
+# Ignore Dependencies
+.engine
+testbox/*
+# Test Results
+tests/results
