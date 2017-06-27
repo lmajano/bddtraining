@@ -31,6 +31,8 @@ install:
   # Setup for our tests
   - mkdir tests/results
   - sudo chmod -R 775 tests/results
+  # Start up the engine
+  - box server start cfengine=$ENGINE name=$ENGINE port=56011 rewritesEnable=true
 
 # Build script - note module versioning is passed to ANT
 script:
