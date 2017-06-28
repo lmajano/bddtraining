@@ -7,6 +7,15 @@ component extends="testbox.system.BaseSpec"{
 
 	// executes before all suites+specs in the run() method
 	function beforeAll(){
+		addMatchers( {
+			toBeARanger : function( expectation, args ){
+
+				var rangers = [ "Carlos", "Henrik", "Chuck Norris" ];
+				expectation.message = "#expectation.actual# is not a ranger, booooooo!";
+				return ( expectation.isNot ? !arrayContainsNoCase( rangers, expectation.actual ) : arrayContainsNoCase( rangers, expectation.actual ) );
+
+			}
+		} );
 	}
 
 	// executes after all suites+specs in the run() method
@@ -24,6 +33,21 @@ component extends="testbox.system.BaseSpec"{
 /*********************************** BDD SUITES ***********************************/
 
 	function run( testResults, testBox ){
+
+		describe( "Custom Matchers", function(){
+
+				it( "can be a ranger", function(){
+					expect( "Carlos" ).toBeARanger();
+				});
+
+				it( "cannot be a ranger", function(){
+					expect( "Nicholas" ).notToBeARanger();
+				});
+
+				it( "cannot be a ranger", function(){
+					expect( "Luis" ).notToBeARanger();
+				});
+		});
 
 		describe( "Division", function(){
 			it( "works for non-zero numbers", function(){
