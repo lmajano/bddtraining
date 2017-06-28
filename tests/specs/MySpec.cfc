@@ -2,7 +2,7 @@
 * My BDD Test
 */
 component extends="testbox.system.BaseSpec"{
-	
+
 /*********************************** LIFE CYCLE Methods ***********************************/
 
 	// executes before all suites+specs in the run() method
@@ -17,15 +17,41 @@ component extends="testbox.system.BaseSpec"{
 		return structKeyExists( server, "lucee" );
 	}
 
+	function divide( a, b ){
+		return a / b;
+	}
+
 /*********************************** BDD SUITES ***********************************/
 
 	function run( testResults, testBox ){
+
+		describe( "Division", function(){
+			it( "works for non-zero numbers", function(){
+				expect( divide( 5, 1 ) ).toBe( 5 );
+			});
+			it( "should throw an exception for divide by zero", function(){
+				expect( function(){
+					divide( 5, 0 );
+				} ).toThrow();
+			});
+		} );
+
+		describe( title="Mini Load Tester", asyncAll=true, body=function(){
+
+			for( var x = 1; x lte 100; x++ ){
+				it( "can execute thread #x#", function(){
+					sleep( randRange( 1, 500 ) );
+					expect( 0 ).toBe( 0 );
+				});
+			}
+
+		} );
 
 		describe( "Outter Describe", function(){
 			beforeEach(function( currentSpec ){
 				x = 1;
 			});
-			
+
 			afterEach( function() {
 				debug( x );
 			} );
@@ -38,16 +64,17 @@ component extends="testbox.system.BaseSpec"{
 				afterEach( function() {
 					x--;
 				} );
-				
+
 				it( "can validate a spec", function(){
-					debug( x );	
+					debug( x );
+					expect( x ).toBe( 2 );
 				});
 			});
 
 			it( "can validate a spec", function(){
 				expect(	0 ).toBe( 0 );
 			});
-		
+
 		});
 
 		// all your suites go here.
@@ -69,15 +96,15 @@ component extends="testbox.system.BaseSpec"{
 			it( "can validate around variables", function(){
 				expect(	myName ).toBe( "Luis" );
 			});
-		
+
 		});
 
-		describe( 
-			title 	: "My Second Suite", 
-			labels	: "cli", 
+		describe(
+			title   : "My Second Suite",
+			labels	: "cli",
 			skip  	: function(){
 				return false;
-			}, 
+			},
 			body  	: function(){
 
 				beforeEach(function( currentSpec ){
@@ -94,7 +121,7 @@ component extends="testbox.system.BaseSpec"{
 				it( "can validate coldbox 2", function(){
 					expect(	coldbox ).toBe( 22 );
 				});
-		
+
 				it( "can validate an email", function(){
 					expect(	"lmajano@gmail.com" ).toBeEmail();
 				});
@@ -102,9 +129,9 @@ component extends="testbox.system.BaseSpec"{
 				it( "can validate integers", function(){
 					expect(	1.45 ).notToBeInteger();
 				});
-		
+
 			}
 		);
 	}
-	
+
 }
